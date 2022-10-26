@@ -4,62 +4,131 @@
 
 ### Загрузка DICOM файла
 
-Метод: POST
-Путь:  /data
-Параметры:
-- file  -   Multipart файл
+*Метод*: `POST`
+
+*Путь*: `/dicom`
+
+| Parameter | Description |
+| :----------- | :--------------- |
+| file | DICOM файл в формате Multipart файл |
 
 Ответ:
 
-- id Идентификатор файла
+
+```json
+{
+    "dicom-id": "String"
+}
+```
 
 ### Данные DICOM
 
-Метод: GET
-Путь:  /data/{id}
+Запрос возвращает поля из DICOM файла с указанным идентификатором. Медиа не возвращается. Вместо медиа возвращаются идентификаторы, используя которые можно получить данные отдельными запросами.
+
+*Метод*: `GET`
+
+*Путь*: `/dicom/{dicom-id}`
+
 Параметры:
 
-- id Идентификатор файла
+| Parameter | Description |
+| :----------- | :--------------- |
+| dicom-id | Идентификатор файла|
 
 Ответ:
 
 ```json
 {
-    id: "String",
-    images: ["Integer"],
+    "dicom-id": "String",
+    "images": ["Integer"],
 }
 ```
 
 ### Изображение
 
-Метод: GET
-Путь:  /data/{id}/image/{image}
-Параметры:
+Запрос возвращает из DICOM файла с идентификатором {dicom-id} изображение с идентификатором {image-id}
 
-- id Идентификатор файла
-- image Идентификатор изображения
+*Метод*: `GET`
+
+*Путь*: `/dicom/{dicom-id}/image/{image-id}`
+
+| Parameter | Description |
+| :----------- | :--------------- |
+| dicom-id | Идентификатор файла |
+| image-id | Идентификатор изображения |
 
 Ответ: изображение
 
-### Получение разметки
+### Получение разметки для изображения
 
-Метод: GET
-Путь:  /data/{id}/markup
-Параметры:
+Запрос возвращает набор примитивов разметки для изображения {image-id} DICOM файла {dicom-id}
 
-- id инедтификатор файла
+*Метод*: `GET`
+
+*Путь*:  `/dicom/{dicom-id}/image/{image-id}/markup`
+
+| Parameter | Description |
+| :----------- | :--------------- |
+| dicom-id | инедтификатор файла |
+| image-id | Идентификатор изображения |
 
 Ответ:
 
 ```json
 {
-    id: "String",
-    markup: [
+    "dicom-id": "String",
+    "image-id": "Integer",
+    "tags": ["String"],
+    "markup": [
         {
-            id: "String",
-            tags: "String",
-            type: "String",
-            geometry: [["Float", "Float"]],
+            "type": "String",
+            "geometry": [["Float", "Float"]],
+        }
+    ]
+}
+```
+
+### Сохранение разметки для изображения
+
+Запрос возвращает набор примитивов разметки для изображения из DICOM файла 
+
+*Метод*: `POST`
+
+*Путь*:  `/dicom/{dicom-id}/image/{image-id}/markup`
+
+| Parameter | Description |
+| :----------- | :--------------- |
+| dicom-id | инедтификатор файла |
+| image-id | Идентификатор изображения |
+| tags | Список тегов |
+| type | Тип примитива |
+| geometry | Список точек примитива |
+
+Тело запроса:
+
+```json
+{
+    "tags": ["String"],
+    "markup": [
+        {
+            "type": "String",
+            "geometry": [["Float", "Float"]],
+        }
+    ]
+}
+```
+
+Ответ:
+
+```json
+{
+    "dicom-id": "String",
+    "image-id": "Integer",
+    "tags": ["String"],
+    "markup": [
+        {
+            "type": "String",
+            "geometry": [["Float", "Float"]],
         }
     ]
 }
