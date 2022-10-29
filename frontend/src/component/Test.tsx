@@ -51,16 +51,39 @@ const Editor = () => {
     console.log('markups', markups)
     console.log(selectors)
   }
+  /**
+   * Запрет на перемещение фигур вне картинки
+   * @param elem 
+   */
+  const onCanvasChange = (elem) => {
+    const img = getImage();
+
+    if (elem.target.top < img.top) {
+      elem.target.top = img.top
+    }
+    if (elem.target.left < img.left) {
+      elem.target.left = img.left
+    }
+    if (elem.target.left + elem.target.width > img.left + img.width) {
+      elem.target.left = img.left + img.width - elem.target.width
+    }
+    if (elem.target.top + elem.target.height > img.top + img.height) {
+
+      elem.target.top = img.top + img.height - elem.target.height
+    }
+  }
   useEffect(() => {
-    const canvas = new fabric.Canvas("my-fabric-canvas");
+    if (canvas) {
+      canvas.on({
+        'object:moving': onCanvasChange,
+      });
+    }
+  }, [canvas])
+  useEffect(() => {
+    const canvas = new fabric.Canvas("my-fabric-canvas", { preserveObjectStacking: true });
 
     setCanvas(canvas)
-    // canvas.on({
-    // 'object:moving': onCanvasChage,
-    // 'object:scaling': onChange,
-    // 'object:rotating': onChange,
-    // });
-
+    
     return () => {
       canvas.dispose();
     };
@@ -70,7 +93,8 @@ const Editor = () => {
     fabric.Image.fromURL('../img/mrt.jpeg', function (img) {
       console.log('img', img.width)
       console.log('img', img.height)
-      img.myId = 'myimg'
+      img.set({ myId: 'myimg' })
+      // img.myId = 'myimg'
       canvas.add(img);
       canvas.centerObject(img);
       // todo add background image ?
@@ -82,6 +106,7 @@ const Editor = () => {
   }
   const addRect = () => {
     const img = getImage();
+    if (!img) return
     //todo инициализация по центру картинки ?
     canvas.add(new fabric.Rect(
       { top: img.top + 100, left: img.left + 100, width: 100, height: 100, fill: 'rgba(255, 255, 255, 0.0)', stroke: 'red', type: 'rect' }
@@ -112,4 +137,32 @@ export default Editor
 
 /**
  * Добавить компонент с запросом списка dicom с бэка и их отображением
+ */
+
+
+
+/**
+ * Образовательная часть (библиотека)
+ * Пользователь заходит на вебку и видит боковое меню с категориями голова/легкие или по болезням /categories
+ * Далее получает таблицу с поиском и пагинацей
+ * 
+ * Загрузить новый dicom
+ * 
+ * Мои dicom
+ */
+
+/**
+ * Редактор
+ * Загрузчик
+ * Боковая панель
+ * Верхняя панель
+ */
+
+/**
+ * TODO list
+ * блокировать добавление фигур без картинки - done
+ * блокировать перемещение фигур за картинку - вщту
+ * привязывать координаты фигур к картинке
+ * блокировать передвижение картинки? только rotate?
+ * фигуры всегда выше картинки (zIndex)
  */
