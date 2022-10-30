@@ -1,5 +1,9 @@
 # Документация проекта
 
+# Адрес сервера
+
+`http://45.135.165.211:8181`
+
 ## API
 
 ### Загрузка DICOM файла
@@ -17,7 +21,7 @@
 
 ```json
 {
-    "dicom-id": "String"
+    "dicomId": "String"
 }
 ```
 
@@ -27,57 +31,57 @@
 
 *Метод*: `GET`
 
-*Путь*: `/dicom/{dicom-id}`
+*Путь*: `/dicom/{dicomId}`
 
 Параметры:
 
 | Parameter | Description |
 | :----------- | :--------------- |
-| dicom-id | Идентификатор файла|
+| dicomId | Идентификатор файла|
 
 Ответ:
 
 ```json
 {
-    "dicom-id": "String",
+    "dicomId": "String",
     "images": ["Integer"],
 }
 ```
 
 ### Изображение
 
-Запрос возвращает из DICOM файла с идентификатором {dicom-id} изображение с идентификатором {image-id}
+Запрос возвращает из DICOM файла с идентификатором {dicomId} изображение с идентификатором {imageId}
 
 *Метод*: `GET`
 
-*Путь*: `/dicom/{dicom-id}/image/{image-id}`
+*Путь*: `/dicom/{dicomId}/image/{imageId}`
 
 | Parameter | Description |
 | :----------- | :--------------- |
-| dicom-id | Идентификатор файла |
-| image-id | Идентификатор изображения |
+| dicomId | Идентификатор файла |
+| imageId | Идентификатор изображения |
 
 Ответ: изображение
 
 ### Получение разметки для изображения
 
-Запрос возвращает набор примитивов разметки для изображения {image-id} DICOM файла {dicom-id}
+Запрос возвращает набор примитивов разметки для изображения {imageId} DICOM файла {dicomId}
 
 *Метод*: `GET`
 
-*Путь*:  `/dicom/{dicom-id}/image/{image-id}/markup`
+*Путь*:  `/dicom/{dicomId}/image/{imageId}/markup`
 
 | Parameter | Description |
 | :----------- | :--------------- |
-| dicom-id | инедтификатор файла |
-| image-id | Идентификатор изображения |
+| dicomId | инедтификатор файла |
+| imageId | Идентификатор изображения |
 
 Ответ:
 
 ```json
 {
-    "dicom-id": "String",
-    "image-id": "Integer",
+    "dicomId": "String",
+    "imageId": "Integer",
     "tags": ["String"],
     "markup": [
         {
@@ -94,12 +98,12 @@
 
 *Метод*: `POST`
 
-*Путь*:  `/dicom/{dicom-id}/image/{image-id}/markup`
+*Путь*:  `/dicom/{dicomId}/image/{imageId}/markup`
 
 | Parameter | Description |
 | :----------- | :--------------- |
-| dicom-id | инедтификатор файла |
-| image-id | Идентификатор изображения |
+| dicomId | инедтификатор файла |
+| imageId | Идентификатор изображения |
 | tags | Список тегов |
 | type | Тип примитива |
 | geometry | Список точек примитива |
@@ -122,8 +126,8 @@
 
 ```json
 {
-    "dicom-id": "String",
-    "image-id": "Integer",
+    "dicomId": "String",
+    "imageId": "Integer",
     "tags": ["String"],
     "markup": [
         {
