@@ -80,8 +80,8 @@
 
 ```json
 {
-  "dicomId": 91,
-  "imageId": 32,
+  "dicomId": "Integer",
+  "imageId": "Integer",
   "tags": ["String"],
   "markup": [
     {
@@ -136,8 +136,8 @@
 
 ```json
 {
-  "dicomId": 91,
-  "imageId": 32,
+  "dicomId": "Integer",
+  "imageId": "Integer",
   "tags": ["String"],
   "markup": [
     {
