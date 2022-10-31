@@ -3,10 +3,14 @@ package org.medicalhack.dicomserver.domain.entities.markup;
 import java.util.List;
 
 public class MarkupItem {
-    String type;
-    List<List<Double>> geometry;
 
-    public MarkupItem(String type, List<List<Double>> geometry) {
+    String type;
+    List<MarkupPoint> geometry;
+
+    public MarkupItem() {
+    }
+
+    public MarkupItem(String type, List<MarkupPoint> geometry) {
         this.type = type;
         this.geometry = geometry;
     }
@@ -15,9 +19,16 @@ public class MarkupItem {
         return type;
     }
 
-    public List<List<Double>> getGeometry() {
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public List<MarkupPoint> getGeometry() {
         return geometry;
     }
 
-    
+    public void setGeometry(List<MarkupPoint> geometry) {
+        this.geometry = geometry;
+    }
+
 }

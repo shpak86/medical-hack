@@ -21,7 +21,7 @@
 
 ```json
 {
-    "dicomId": "String"
+    "dicomId": "Integer"
 }
 ```
 
@@ -43,7 +43,7 @@
 
 ```json
 {
-    "dicomId": "String",
+    "dicomId": "Integer",
     "images": ["Integer"],
 }
 ```
@@ -80,21 +80,26 @@
 
 ```json
 {
-    "dicomId": "String",
-    "imageId": "Integer",
-    "tags": ["String"],
-    "markup": [
+  "dicomId": 91,
+  "imageId": 32,
+  "tags": ["String"],
+  "markup": [
+    {
+      "type": "String",
+      "geometry": [
         {
-            "type": "String",
-            "geometry": [["Float", "Float"]],
+          "x": "Float",
+          "y": "Float"
         }
-    ]
+      ]
+    }
+  ]
 }
 ```
 
 ### Сохранение разметки для изображения
 
-Запрос возвращает набор примитивов разметки для изображения из DICOM файла 
+Запрос сохранения разметки для изображения из DICOM файла 
 
 *Метод*: `POST`
 
@@ -112,13 +117,18 @@
 
 ```json
 {
-    "tags": ["String"],
-    "markup": [
+  "tags": ["String"],
+  "markup": [
+    {
+      "type": "String",
+      "geometry": [
         {
-            "type": "String",
-            "geometry": [["Float", "Float"]],
+          "x": "Float",
+          "y": "Float"
         }
-    ]
+      ]
+    }
+  ]
 }
 ```
 
@@ -126,14 +136,19 @@
 
 ```json
 {
-    "dicomId": "String",
-    "imageId": "Integer",
-    "tags": ["String"],
-    "markup": [
+  "dicomId": 91,
+  "imageId": 32,
+  "tags": ["String"],
+  "markup": [
+    {
+      "type": "String",
+      "geometry": [
         {
-            "type": "String",
-            "geometry": [["Float", "Float"]],
+          "x": "Float",
+          "y": "Float"
         }
-    ]
+      ]
+    }
+  ]
 }
 ```
