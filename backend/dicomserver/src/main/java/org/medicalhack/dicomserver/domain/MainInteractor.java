@@ -1,13 +1,7 @@
 package org.medicalhack.dicomserver.domain;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import org.medicalhack.dicomserver.data.utils.DicomExtractor;
 import org.medicalhack.dicomserver.domain.entities.dicom.DicomData;
-import org.medicalhack.dicomserver.domain.entities.dicom.DicomTag;
 import org.medicalhack.dicomserver.domain.entities.markup.ImageMarkup;
 import org.medicalhack.dicomserver.domain.repositories.DicomDataRepository;
 import org.medicalhack.dicomserver.domain.repositories.ImagesRepository;
@@ -25,32 +19,20 @@ public class MainInteractor implements MainUseCase {
     private DicomDataRepository dicomDataRepo;
     private ImagesRepository imagesRepo;
     private MarkupRepository markupRepo;
+    private DicomExtractor dicomExtractor;
 
     @Autowired
-    public MainInteractor(DicomDataRepository dicomDataRepo, ImagesRepository imagesRepo, MarkupRepository markupRepo) {
+    public MainInteractor(DicomDataRepository dicomDataRepo, ImagesRepository imagesRepo, MarkupRepository markupRepo,
+            DicomExtractor dicomExtractor) {
         this.dicomDataRepo = dicomDataRepo;
         this.imagesRepo = imagesRepo;
         this.markupRepo = markupRepo;
+        this.dicomExtractor = dicomExtractor;
     }
 
     @Override
     public long extract(byte[] dicom) {
-        long dicomId = System.currentTimeMillis();
-        List<DicomTag> tags = new ArrayList<>();
-        tags.add(new DicomTag("tag1", "XX", "tag1", "0"));
-        List<Long> images = Arrays.asList(1L, 2L);
-        DicomData dicomData = new DicomData(dicomId, tags, images);
-        dicomDataRepo.add(dicomData);
-        try {
-            byte[] fileData1 = Files.readAllBytes(
-                    Paths.get("/home/ash/projects/medical-hack/backend/dicomserver/src/main/resources/mock/1.jpg"));
-            byte[] fileData2 = Files.readAllBytes(
-                    Paths.get("/home/ash/projects/medical-hack/backend/dicomserver/src/main/resources/mock/2.jpg"));
-            imagesRepo.add(dicomId, 1, fileData1);
-            imagesRepo.add(dicomId, 2, fileData2);
-        } catch (Exception e) {
-            logger.error("Somethong went wrong", e);
-        }
+        long dicomId = dicomExtractor.extract(dicom);
         return dicomId;
     }
 

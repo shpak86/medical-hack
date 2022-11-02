@@ -64,4 +64,10 @@ public class ImagesRepositoryImpl implements ImagesRepository {
         return result;
     }
 
+    @Override
+    public Path getJpegPath(long dicomId, long imageId) {
+        return Paths.get(storagePath, Long.toString(dicomId), IMAGES_DIRECTORY,
+                Long.toString(imageId) + ".jpg");
+    }
+
 }

@@ -1,5 +1,7 @@
 package org.medicalhack.dicomserver.presentation;
 
+import java.io.IOException;
+
 import org.medicalhack.dicomserver.domain.MainInteractor;
 import org.medicalhack.dicomserver.domain.entities.markup.ImageMarkup;
 import org.slf4j.Logger;
@@ -26,8 +28,18 @@ public class DicomController {
     MainInteractor interactor;
 
     @PostMapping("/")
-    ResponseEntity<Long> postDicom(@RequestParam("file") MultipartFile file) {
-        return new ResponseEntity<Long>(interactor.extract(new byte[] {}), HttpStatus.OK);
+    ResponseEntity<String> postDicom(@RequestParam("file") MultipartFile file) {
+        byte[] data;
+        String result = null;
+        HttpStatus status = HttpStatus.OK;
+        try {
+            data = file.getBytes();
+            result = "{\"dicomId\":" + interactor.extract(data) + "}";
+        } catch (IOException e) {
+            e.printStackTrace();
+            status = HttpStatus.UNPROCESSABLE_ENTITY;
+        }
+        return new ResponseEntity<String>(result, status);
     }
 
     @GetMapping(value = "/{dicomId}/image/{imageId}", produces = MediaType.IMAGE_JPEG_VALUE)
