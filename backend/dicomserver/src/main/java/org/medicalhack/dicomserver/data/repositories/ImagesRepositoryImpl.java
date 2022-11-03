@@ -6,6 +6,8 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 import org.medicalhack.dicomserver.domain.repositories.ImagesRepository;
 import org.slf4j.Logger;
@@ -21,8 +23,8 @@ public class ImagesRepositoryImpl implements ImagesRepository {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private String storagePath;
-    private OpenOption[] openOptions = { StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING,
-            StandardOpenOption.WRITE };
+    private OpenOption[] openOptions = {StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING,
+            StandardOpenOption.WRITE};
 
     @Autowired
     public ImagesRepositoryImpl(@Value("${storage.path}") String storagePath) {
@@ -52,12 +54,11 @@ public class ImagesRepositoryImpl implements ImagesRepository {
     }
 
     @Override
-    public byte[] get(long dicomId, long imageId) {
-        byte[] result = new byte[] {};
+    public Optional<byte[]> get(long dicomId, long imageId) {
+        Optional<byte[]> result = Optional.empty();
         try {
-            Path imagePath = Paths.get(storagePath, Long.toString(dicomId), IMAGES_DIRECTORY,
-                    Long.toString(imageId) + ".jpg");
-            result = Files.readAllBytes(imagePath);
+            Path imagePath = Paths.get(storagePath, Long.toString(dicomId), IMAGES_DIRECTORY, imageId + ".jpg");
+            result = Optional.of(Files.readAllBytes(imagePath));
         } catch (IOException e) {
             logger.error("Can't read image from the storage", e);
         }
@@ -66,8 +67,7 @@ public class ImagesRepositoryImpl implements ImagesRepository {
 
     @Override
     public Path getJpegPath(long dicomId, long imageId) {
-        return Paths.get(storagePath, Long.toString(dicomId), IMAGES_DIRECTORY,
-                Long.toString(imageId) + ".jpg");
+        return Paths.get(storagePath, Long.toString(dicomId), IMAGES_DIRECTORY, imageId + ".jpg");
     }
 
 }

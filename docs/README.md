@@ -31,7 +31,7 @@
 
 *Метод*: `GET`
 
-*Путь*: `/dicom/{dicomId}`
+*Путь*: `/dicom/{dicomId}/fields`
 
 Параметры:
 
@@ -44,7 +44,8 @@
 ```json
 {
     "dicomId": "Integer",
-    "images": ["Integer"],
+    "imagesNumber": "Integer",
+    "modality": "String"
 }
 ```
 

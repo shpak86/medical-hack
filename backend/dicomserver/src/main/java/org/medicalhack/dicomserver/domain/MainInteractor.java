@@ -1,15 +1,18 @@
 package org.medicalhack.dicomserver.domain;
 
-import org.medicalhack.dicomserver.data.utils.DicomExtractor;
+
 import org.medicalhack.dicomserver.domain.entities.dicom.DicomData;
 import org.medicalhack.dicomserver.domain.entities.markup.ImageMarkup;
 import org.medicalhack.dicomserver.domain.repositories.DicomDataRepository;
 import org.medicalhack.dicomserver.domain.repositories.ImagesRepository;
 import org.medicalhack.dicomserver.domain.repositories.MarkupRepository;
+import org.medicalhack.dicomserver.domain.utils.DicomExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class MainInteractor implements MainUseCase {
@@ -31,18 +34,17 @@ public class MainInteractor implements MainUseCase {
     }
 
     @Override
-    public long extract(byte[] dicom) {
-        long dicomId = dicomExtractor.extract(dicom);
-        return dicomId;
+    public Optional<Long> extract(byte[] dicom) {
+        return dicomExtractor.extract(dicom);
     }
 
     @Override
-    public DicomData getDicomData(long dicomId) {
+    public Optional<DicomData> getDicomData(long dicomId) {
         return dicomDataRepo.get(dicomId);
     }
 
     @Override
-    public ImageMarkup getImageMarkup(long dicomId, long imageId) {
+    public Optional<ImageMarkup> getImageMarkup(long dicomId, long imageId) {
         return markupRepo.get(dicomId, imageId);
     }
 
@@ -52,7 +54,7 @@ public class MainInteractor implements MainUseCase {
     }
 
     @Override
-    public byte[] getImage(long dicomId, long imageId) {
+    public Optional<byte[]> getImage(long dicomId, long imageId) {
         return imagesRepo.get(dicomId, imageId);
     }
 

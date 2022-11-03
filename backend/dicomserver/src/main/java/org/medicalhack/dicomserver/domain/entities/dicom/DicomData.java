@@ -1,28 +1,25 @@
 package org.medicalhack.dicomserver.domain.entities.dicom;
 
-import java.util.List;
-
 public class DicomData {
-    long id;
-    List<DicomTag> tags;
-    List<Long> images;
+    long dicomId;
+    long imagesNumber;
+    String modality;
 
-    public DicomData(long id, List<DicomTag> tags, List<Long> images) {
-        this.id = id;
-        this.tags = tags;
-        this.images = images;
+    public DicomData(long dicomId, long imagesNumber, String modality) {
+        this.dicomId = dicomId;
+        this.imagesNumber = imagesNumber;
+        this.modality = modality;
     }
 
-    public long getId() {
-        return id;
+    public long getDicomId() {
+        return dicomId;
     }
 
-    public List<DicomTag> getTags() {
-        return tags;
+    public long getImagesNumber() {
+        return imagesNumber;
     }
 
-    public List<Long> getImages() {
-        return images;
+    public String getModality() {
+        return modality;
     }
-
 }

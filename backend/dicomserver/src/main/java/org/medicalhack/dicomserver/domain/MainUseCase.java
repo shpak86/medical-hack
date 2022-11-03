@@ -3,15 +3,17 @@ package org.medicalhack.dicomserver.domain;
 import org.medicalhack.dicomserver.domain.entities.dicom.DicomData;
 import org.medicalhack.dicomserver.domain.entities.markup.ImageMarkup;
 
+import java.util.Optional;
+
 public interface MainUseCase {
 
-    long extract(byte[] dicom);
+    Optional<Long> extract(byte[] dicom);
 
-    DicomData getDicomData(long dicomId);
+    Optional<DicomData> getDicomData(long dicomId);
 
-    byte[] getImage(long dicomId, long imageId);
+    Optional<byte[]> getImage(long dicomId, long imageId);
 
-    ImageMarkup getImageMarkup(long dicomId, long imageId);
+    Optional<ImageMarkup> getImageMarkup(long dicomId, long imageId);
 
     boolean setImageMarkup(ImageMarkup markup);
 

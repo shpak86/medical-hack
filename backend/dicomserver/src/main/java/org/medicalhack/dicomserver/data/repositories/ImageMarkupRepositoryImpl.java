@@ -2,6 +2,7 @@ package org.medicalhack.dicomserver.data.repositories;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.medicalhack.dicomserver.data.entities.markup.ImageMarkupEntity;
 import org.medicalhack.dicomserver.data.entities.markup.MarkupEntity;
@@ -41,8 +42,9 @@ public class ImageMarkupRepositoryImpl implements MarkupRepository {
     }
 
     @Override
-    public ImageMarkup get(long dicomId, long imageId) {
+    public Optional<ImageMarkup> get(long dicomId, long imageId) {
         ImageMarkupEntity entity = repo.findByDicomIdAndImageId(dicomId, imageId);
+        Optional<ImageMarkup> result = Optional.empty();
         if (entity != null) {
             List<MarkupItem> markupItems = new ArrayList<>();
             for (MarkupEntity item : entity.getMarkup()) {
@@ -53,10 +55,9 @@ public class ImageMarkupRepositoryImpl implements MarkupRepository {
                 markupItems.add(new MarkupItem(item.getType(), geometry));
             }
             ImageMarkup imageMarkup = new ImageMarkup(dicomId, imageId, entity.getTags(), markupItems);
-            return imageMarkup;
-        } else {
-            return null;
+            result = Optional.of(imageMarkup);
         }
+        return result;
 
     }
 
