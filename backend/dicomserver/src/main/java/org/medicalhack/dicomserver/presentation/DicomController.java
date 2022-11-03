@@ -1,8 +1,10 @@
 package org.medicalhack.dicomserver.presentation;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 import org.medicalhack.dicomserver.domain.MainInteractor;
+import org.medicalhack.dicomserver.domain.entities.dicom.DicomData;
 import org.medicalhack.dicomserver.domain.entities.markup.ImageMarkup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,50 +36,45 @@ public class DicomController {
         HttpStatus status = HttpStatus.OK;
         try {
             data = file.getBytes();
-            result = "{\"dicomId\":" + interactor.extract(data) + "}";
-        } catch (IOException e) {
-            e.printStackTrace();
+            Long dicomId = interactor.extract(data).orElseThrow();
+            result = "{\"dicomId\":" + dicomId + "}";
+        } catch (IOException | NoSuchElementException e) {
+            logger.error("Unable to process request", e);
             status = HttpStatus.UNPROCESSABLE_ENTITY;
         }
-        return new ResponseEntity<String>(result, status);
+        return new ResponseEntity<>(result, status);
+    }
+
+    @GetMapping("/{dicomId}/fields")
+    ResponseEntity<DicomData> getDicomData(@PathVariable String dicomId) {
+        return interactor.getDicomData(Long.parseLong(dicomId))
+                .map(file -> new ResponseEntity<>(file, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @GetMapping(value = "/{dicomId}/image/{imageId}", produces = MediaType.IMAGE_JPEG_VALUE)
     ResponseEntity<byte[]> getDicomImage(@PathVariable String dicomId,
-            @PathVariable String imageId) {
-        byte[] image = null;
-        HttpStatus status;
-        try {
-            image = interactor.getImage(Long.parseLong(dicomId), Long.parseLong(imageId));
-            status = HttpStatus.OK;
-        } catch (Exception e) {
-            logger.warn("Image not found", e);
-            status = HttpStatus.NOT_FOUND;
-        }
-        return new ResponseEntity<byte[]>(image, status);
+                                         @PathVariable String imageId) {
+        return interactor.getImage(Long.parseLong(dicomId), Long.parseLong(imageId))
+                .map(image -> new ResponseEntity<>(image, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/{dicomId}/image/{imageId}/markup")
     ResponseEntity<ImageMarkup> getDicomImageMarkup(@PathVariable String dicomId,
-            @PathVariable String imageId) {
-        // todo: give nice names
-        ImageMarkup imageMarkup = interactor.getImageMarkup(Long.parseLong(dicomId), Long.parseLong(imageId));
-        HttpStatus status;
-        if (imageMarkup == null) {
-            status = HttpStatus.NOT_FOUND;
-        } else {
-            status = HttpStatus.OK;
-        }
-        return new ResponseEntity<ImageMarkup>(imageMarkup, status);
+                                                    @PathVariable String imageId) {
+        return interactor.getImageMarkup(Long.parseLong(dicomId), Long.parseLong(imageId))
+                .map(markup -> new ResponseEntity<>(markup, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/{dicomId}/image/{imageId}/markup")
     ResponseEntity<ImageMarkup> postDicomImageMarkup(@PathVariable String dicomId,
-            @PathVariable String imageId, @RequestBody ImageMarkup body) {
-        body.setDicomId(Long.valueOf(dicomId));
-        body.setImageId(Long.valueOf(imageId));
+                                                     @PathVariable String imageId, @RequestBody ImageMarkup body) {
+        body.setDicomId(Long.parseLong(dicomId));
+        body.setImageId(Long.parseLong(imageId));
         interactor.setImageMarkup(body);
-        return new ResponseEntity<ImageMarkup>(body, HttpStatus.OK);
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
 }

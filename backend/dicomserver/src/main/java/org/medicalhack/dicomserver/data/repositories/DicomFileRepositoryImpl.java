@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import org.medicalhack.dicomserver.domain.repositories.DicomFileRepository;
 import org.slf4j.Logger;
@@ -47,10 +48,15 @@ public class DicomFileRepositoryImpl implements DicomFileRepository {
     }
 
     @Override
-    public File get(long dicomId) {
-        Path dicomFilePath = Paths.get(storagePath, Long.toString(dicomId), DICOM_DIRECTORY,
-                Long.toString(dicomId) + ".dcm");
-        return dicomFilePath.toFile();
+    public Optional<File> get(long dicomId) {
+        Optional<File> result = Optional.empty();
+        try {
+            Path dicomFilePath = Paths.get(storagePath, Long.toString(dicomId), DICOM_DIRECTORY, dicomId + ".dcm");
+            result = Optional.of(dicomFilePath.toFile());
+        } catch (Exception e) {
+            logger.error("Unable to get DICOM file");
+        }
+        return result;
     }
 
 }
