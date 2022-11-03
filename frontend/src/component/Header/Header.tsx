@@ -5,8 +5,11 @@ import {
   Button,
   Typography,
   Slider,
+  Stack,
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
+import LoadingButton from "@mui/lab/LoadingButton";
+import SaveIcon from "@mui/icons-material/Save";
 import styles from "./Header.module.scss";
 
 const drawerWidth = 240;
@@ -48,57 +51,89 @@ export function Header({
       <Toolbar
         sx={{ bgcolor: grey[800], display: "flex", alignItems: "center" }}
       >
-        <ButtonGroup variant="outlined" aria-label="outlined button group">
-          <Button sx={buttonStyle} onClick={addRect}>
-            квадрат
-          </Button>
-          <Button sx={buttonStyle} onClick={addCircle}>
-            круг
-          </Button>
-          <Button sx={buttonStyle} onClick={addLine}>
-            линейка
-          </Button>
-          <Button sx={buttonStyle} onClick={loadImage}>
-            Выгрузить снимок
-          </Button>
-        </ButtonGroup>
-        {/* <Button sx={buttonStyle} onClick={getObjects}>Все объекты</Button>
-          <Button sx={buttonStyle} onClick={getInterceptions}>
-            Получить разметку
-          </Button>  */}
-        {/* <Button onClick={clearImgFilters}>Сбросить яркость и контраст</Button> */}
-        <div className={styles.sliderContainer}>
-          <Typography
-            sx={{ ...buttonStyle, marginRight: 2 }}
-            variant="subtitle2"
-          >
-            КОНТРАСТ:
-          </Typography>
-          <Slider
-            onChange={handleRange("contrast")}
-            value={contrastValue}
-            min={-0.9}
-            max={0.9}
-            step={0.05}
-            aria-label="Slider"
-            valueLabelDisplay="off"
-          />
-          <Typography
-            sx={{ ...buttonStyle, marginRight: 2 }}
-            variant="subtitle2"
-          >
-            ЯРКОСТЬ:
-          </Typography>
-          <Slider
-            value={brightnessValue}
-            onChange={handleRange('brightness')}
-            min={-0.9}
-            max={0.9}
-            step={0.05}
-            aria-label="Slider"
-            valueLabelDisplay="off"
-          />
-        </div>
+        <Stack
+          width="100%"
+          direction="row"
+          justifyContent="space-around"
+          alignItems="center"
+        >
+          <ButtonGroup variant="outlined" aria-label="outlined button group">
+            <Button size="small" sx={buttonStyle} onClick={addRect}>
+              квадрат
+            </Button>
+            <Button size="small" sx={buttonStyle} onClick={addCircle}>
+              круг
+            </Button>
+            <Button size="small" sx={buttonStyle} onClick={addLine}>
+              линейка
+            </Button>
+          </ButtonGroup>
+          <div className={styles.mainSlider}>
+            <div className={styles.nameSlider}>
+              <Typography
+                sx={{ ...buttonStyle, marginRight: 2 }}
+                variant="body2"
+              >
+                КОНТРАСТ:
+              </Typography>
+              <Typography
+                sx={{ ...buttonStyle, marginRight: 2 }}
+                variant="body2"
+              >
+                ЯРКОСТЬ:
+              </Typography>
+            </div>
+            <div className={styles.sliderContainer}>
+              <Slider
+                onChange={handleRange("contrast")}
+                value={contrastValue}
+                min={-0.9}
+                max={0.9}
+                step={0.05}
+                aria-label="Slider"
+                valueLabelDisplay="off"
+                size="small"
+              />
+              <Slider
+                value={brightnessValue}
+                onChange={handleRange("brightness")}
+                min={-0.9}
+                max={0.9}
+                step={0.05}
+                aria-label="Slider"
+                valueLabelDisplay="off"
+                size="small"
+              />
+            </div>
+            <Button onClick={clearImgFilters}>Сбросить</Button>
+          </div>
+          <ButtonGroup variant="outlined" aria-label="outlined button group">
+            <LoadingButton
+              variant="contained"
+              size="small"
+              sx={buttonStyle}
+              onClick={getObjects}
+            >
+              Все объекты
+            </LoadingButton>
+            <LoadingButton
+              variant="contained"
+              size="small"
+              sx={buttonStyle}
+              onClick={getInterceptions}
+            >
+              Разметка
+            </LoadingButton>
+            <LoadingButton
+              variant="contained"
+              size="small"
+              sx={buttonStyle}
+              onClick={loadImage}
+            >
+              Выгрузить
+            </LoadingButton>
+          </ButtonGroup>
+        </Stack>
       </Toolbar>
     </AppBar>
   );
