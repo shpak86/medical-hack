@@ -26,6 +26,8 @@ interface HeaderProps {
   contrastValue: number;
   brightnessValue: number;
   handleChange: () => void;
+  deleteObjects: () => void;
+  deleteLastObject: () => void;
 }
 
 export function Header({
@@ -40,6 +42,8 @@ export function Header({
   contrastValue,
   brightnessValue,
   handleChange,
+  deleteObjects,
+  deleteLastObject,
 }: HeaderProps) {
   return (
     <AppBar
@@ -67,6 +71,14 @@ export function Header({
             </Button>
             <Button size="small" sx={buttonStyle} onClick={addLine}>
               линейка
+            </Button>
+          </ButtonGroup>
+          <ButtonGroup variant="outlined" aria-label="outlined button group">
+            <Button size="small" sx={buttonStyle} onClick={deleteLastObject}>
+              Удалить последний
+            </Button>
+            <Button size="small" sx={buttonStyle} onClick={deleteObjects}>
+              Удалить все
             </Button>
           </ButtonGroup>
           <div className={styles.mainSlider}>

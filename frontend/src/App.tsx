@@ -219,15 +219,27 @@ function App() {
       canvas.dispose();
     };
   }, []);
+  const deleteObjects = () => {
+    canvas.getObjects().forEach(function (o) {
+      if (o.myId !== 'myimg') {
+        canvas.remove(o);
+      }
+    });
+  }
+  const deleteLastObject = () => {
+    const objects = canvas.getObjects();
+    const lastObject = objects[objects.length - 1];
+    if (lastObject.myId !== 'myimg')
+      canvas.remove(lastObject);
+  }
 
   const loadImage = () => {
     const img = getImage(requestImg.data);
     if (img) return;
     fabric.Image.fromURL(requestImg.data, function (img) {
-      img.set({ myId: "myimg", lockMovementY: true, lockMovementX: true });
+      img.set({ myId: "myimg", lockMovementY: true, lockMovementX: true, selectable: false });
       canvas.centerObject(img);
       canvas.add(img);
-
       // todo add background image ?
       // canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
       // scaleX: canvas.width / img.width,
@@ -248,6 +260,7 @@ function App() {
         fill: "rgba(255, 255, 255, 0.0)",
         stroke: "red",
         type: "rect",
+        lockRotation: true
       })
     );
   };
@@ -264,6 +277,7 @@ function App() {
         fill: "rgba(255, 255, 255, 0.0)",
         stroke: "green",
         type: "circle",
+        lockRotation: true
       })
     );
   };
@@ -355,6 +369,8 @@ function App() {
           handleRange={handleRange}
           contrastValue={contrastValue}
           brightnessValue={brightnessValue}
+          deleteObjects={deleteObjects}
+          deleteLastObject={deleteLastObject}
         />
         <Editor />
       </Sidebar>
