@@ -1,6 +1,17 @@
+.mainSlider {
+  display: flex;
+  margin: 0 15px;
+}
+
 .sliderContainer {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  width: 500px;
-  margin-left: 25px;
+  width: 250px;
+}
+
+.nameSlider {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
