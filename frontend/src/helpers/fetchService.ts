@@ -35,6 +35,11 @@ export const fetchService = async (
           throw Error("Ошибка сервера!");
         }
       }
+      if (url.includes("image")) {
+        return res.blob().then((blobResponse) => {
+          return URL.createObjectURL(blobResponse);
+        });
+      }
       return res.json();
     })
     .catch((err) => {

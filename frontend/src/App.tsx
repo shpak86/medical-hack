@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { CssBaseline } from "@mui/material";
+import { CircularProgress, CssBaseline, Stack } from "@mui/material";
 import "./App.css";
 import Sidebar from "./component/Sidebar";
 // import Editor from './component/Editor/Editor';
@@ -30,6 +30,13 @@ function App() {
   const requestImg = useRequest<{ dicomId: number; imageId: number }>();
   const dicomImageMarkup = useRequest<DicomImageMarkup>();
 
+  // && для плавного хода прилодера.
+  const loading = !(
+    !uploadDicom.isLoading &&
+    !requestImgId.isLoading &&
+    !requestImg.isLoading
+  );
+
   // Загрузка диком на сервер.
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files) {
@@ -51,11 +58,12 @@ function App() {
       await requestImgId.request(() => getDicom(dicomId));
       await requestImg.request(() => getDicomImage(dicomId, 0));
       await dicomImageMarkup.request(() => getDicomImageMarkup(dicomId, 0));
-
-      requestImg.data && loadImage();
     }
   }, [uploadDicom?.data?.dicomId]);
-  console.log(requestImg);
+
+  useEffect(() => {
+    requestImg.data && loadImage();
+  }, [requestImg.data]);
 
   useEffect(() => {
     requestDicomData();
@@ -107,8 +115,6 @@ function App() {
         ],
       };
     });
-    console.log("markups", markups);
-    console.log(selectors);
   };
   /**
    * Запрет на перемещение фигур вне картинки
@@ -356,6 +362,15 @@ function App() {
           contrastValue={contrastValue}
           brightnessValue={brightnessValue}
         />
+        {loading && (
+          <Stack
+            minHeight="calc(100vh - 150px)"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <CircularProgress />
+          </Stack>
+        )}
         <Editor />
       </Sidebar>
     </div>
