@@ -31,7 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+#Dicomserver
 /dicom/
 /jars/
-/db/
-/storage/
+/db/*.db
+/storage/**/*.dcm
+/storage/**/*.jpg

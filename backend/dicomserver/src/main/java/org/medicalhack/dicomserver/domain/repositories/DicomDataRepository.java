@@ -1,6 +1,6 @@
 package org.medicalhack.dicomserver.domain.repositories;
 
-import org.medicalhack.dicomserver.domain.entities.dicom.DicomData;
+import org.medicalhack.dicomserver.domain.data.dicom.DicomData;
 
 import java.util.Optional;
 
