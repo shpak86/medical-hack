@@ -1,5 +1,11 @@
 // @ts-nocheck
-import { CircularProgress, CssBaseline, Stack } from "@mui/material";
+import {
+  CircularProgress,
+  CssBaseline,
+  Stack,
+  Box,
+  Skeleton,
+} from "@mui/material";
 import "./App.css";
 import Sidebar from "./component/Sidebar";
 // import Editor from './component/Editor/Editor';
@@ -9,6 +15,7 @@ import React, { useCallback, useEffect, useState } from "react";
 // import api from '../api';
 import Header from "./component/Header";
 import useRequest from "./hooks/useRequest";
+import { grey } from "@mui/material/colors";
 import {
   DicomImageMarkup,
   getDicom,
@@ -16,6 +23,7 @@ import {
   getDicomImageMarkup,
   sendDicom,
 } from "./api/dicom";
+import styles from "./App.module.scss";
 
 function App() {
   const [canvas, setCanvas] = useState();
@@ -227,23 +235,27 @@ function App() {
   }, []);
   const deleteObjects = () => {
     canvas.getObjects().forEach(function (o) {
-      if (o.myId !== 'myimg') {
+      if (o.myId !== "myimg") {
         canvas.remove(o);
       }
     });
-  }
+  };
   const deleteLastObject = () => {
     const objects = canvas.getObjects();
     const lastObject = objects[objects.length - 1];
-    if (lastObject.myId !== 'myimg')
-      canvas.remove(lastObject);
-  }
+    if (lastObject.myId !== "myimg") canvas.remove(lastObject);
+  };
 
   const loadImage = () => {
     const img = getImage(requestImg.data);
     if (img) return;
     fabric.Image.fromURL(requestImg.data, function (img) {
-      img.set({ myId: "myimg", lockMovementY: true, lockMovementX: true, selectable: false });
+      img.set({
+        myId: "myimg",
+        lockMovementY: true,
+        lockMovementX: true,
+        selectable: false,
+      });
       canvas.centerObject(img);
       canvas.add(img);
       // todo add background image ?
@@ -266,7 +278,7 @@ function App() {
         fill: "rgba(255, 255, 255, 0.0)",
         stroke: "red",
         type: "rect",
-        lockRotation: true
+        lockRotation: true,
       })
     );
   };
@@ -283,7 +295,7 @@ function App() {
         fill: "rgba(255, 255, 255, 0.0)",
         stroke: "green",
         type: "circle",
-        lockRotation: true
+        lockRotation: true,
       })
     );
   };
@@ -362,7 +374,32 @@ function App() {
   return (
     <div className="App">
       <CssBaseline />
-      <Sidebar>
+      <Sidebar
+        miniature={
+          <Stack minHeight="calc(100vh - 150px)" alignItems="center">
+            {loading ? (
+              <Skeleton
+                sx={{ bgcolor: grey[800], margin: "20px 8px" }}
+                animation="wave"
+                variant="rectangular"
+                width={220}
+                height={150}
+              />
+            ) : (
+              <Box
+                sx={{
+                  bgcolor: grey[800],
+                  width: 220,
+                  height: 150,
+                  margin: "20px 8px",
+                }}
+              >
+                <img className={styles.img} src={requestImg.data} alt="" />
+              </Box>
+            )}
+          </Stack>
+        }
+      >
         <Header
           handleChange={handleChange}
           addRect={addRect}
