@@ -3,6 +3,7 @@ import { fabric } from "fabric";
 import React, { useCallback, useEffect, useState } from "react";
 // import api from '../api';
 import Header from "../Header";
+import TagSelector from "../TagSelector";
 
 const Editor = () => {
   const [canvas, setCanvas] = useState();
@@ -94,7 +95,7 @@ const Editor = () => {
       console.log("yep");
     }
   };
-  const changeInterceptionCoordinates = () => {};
+  const changeInterceptionCoordinates = () => { };
 
   function zoom(opt) {
     var delta = opt.e.deltaY;
@@ -172,7 +173,7 @@ const Editor = () => {
     const img = getImage();
     if (img) return;
     fabric.Image.fromURL("../img/mrt.jpeg", function (img) {
-      img.set({ myId: "myimg", lockMovementY: true, lockMovementX: true });
+      img.set({ myId: "myimg", lockMovementY: true, lockMovementX: true, selectable: false });
       canvas.centerObject(img);
       canvas.add(img);
 
@@ -196,6 +197,7 @@ const Editor = () => {
         fill: "rgba(255, 255, 255, 0.0)",
         stroke: "red",
         type: "rect",
+        lockRotation: true
       })
     );
   };
@@ -212,6 +214,7 @@ const Editor = () => {
         fill: "rgba(255, 255, 255, 0.0)",
         stroke: "green",
         type: "circle",
+        lockRotation: true
       })
     );
   };
@@ -251,6 +254,19 @@ const Editor = () => {
       })
     );
   };
+  const deleteObjects = () => {
+    canvas.getObjects().forEach(function (o) {
+      if (o.myId !== 'myimg') {
+        canvas.remove(o);
+      }
+    });
+  }
+  const deleteLastObject = () => {
+    const objects = canvas.getObjects();
+    const lastObject = objects[objects.length - 1];
+    if (lastObject.myId !== 'myimg')
+      canvas.remove(lastObject);
+  }
 
   const getObjects = () => {
     canvas.getObjects().forEach(function (o) {
@@ -277,7 +293,7 @@ const Editor = () => {
     setImgBrightnessValue(0);
   };
 
-  const handleRange = (name) => (e) => {    
+  const handleRange = (name) => (e) => {
     if (name === "contrast") setImgContrastValue(+e.target.value);
     else if (name === "brightness") setImgBrightnessValue(+e.target.value);
   };
@@ -302,7 +318,7 @@ const Editor = () => {
         contrastValue={contrastValue}
         brightnessValue={brightnessValue}
       />
-      <canvas id="my-fabric-canvas" width={window.innerWidth - 250} height={window.innerHeight}/>
+      <canvas id="my-fabric-canvas" width={window.innerWidth - 250} height={window.innerHeight} />
     </div>
   );
 };
