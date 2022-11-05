@@ -2,6 +2,7 @@ import { CssBaseline, Skeleton, Typography } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import { grey } from "@mui/material/colors";
 import styles from "./Sidebar.module.scss";
+import TagSelector from "../TagSelector";
 
 const drawerWidth = 240;
 
@@ -47,6 +48,7 @@ export function Sidebar({ children, miniature = Stub }: SidebarProps) {
             МосКомАртель
           </Typography>
         </div>
+        <TagSelector />
         <div className={styles.container}>{miniature}</div>
       </Drawer>
       <main className={styles.content}>
