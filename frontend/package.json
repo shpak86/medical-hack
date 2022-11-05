@@ -50,5 +50,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "proxy": "http://45.135.165.211:8181",
+  "devDependencies": {
+    "@types/fabric": "^4.5.12"
   }
 }

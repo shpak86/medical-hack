@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import LoadingButton from "@mui/lab/LoadingButton";
-import SaveIcon from "@mui/icons-material/Save";
 import styles from "./Header.module.scss";
 
 const drawerWidth = 240;
@@ -26,6 +25,7 @@ interface HeaderProps {
   handleRange: (name: string) => () => void;
   contrastValue: number;
   brightnessValue: number;
+  handleChange: () => void;
 }
 
 export function Header({
@@ -39,6 +39,7 @@ export function Header({
   handleRange,
   contrastValue,
   brightnessValue,
+  handleChange,
 }: HeaderProps) {
   return (
     <AppBar
@@ -131,6 +132,22 @@ export function Header({
               onClick={loadImage}
             >
               Выгрузить
+            </LoadingButton>
+            <LoadingButton
+              component="label"
+              variant="contained"
+              size="small"
+              sx={buttonStyle}
+            >
+              Загрузить
+              <input
+                id="dicom"
+                name="dicom"
+                hidden
+                accept="dicom/*"
+                type="file"
+                onChange={handleChange}
+              />
             </LoadingButton>
           </ButtonGroup>
         </Stack>
