@@ -1,12 +1,16 @@
-import './App.css';
+import { CssBaseline } from "@mui/material";
+import "./App.css";
+import Sidebar from "./component/Sidebar";
 // import Editor from './component/Editor/Editor';
-import Test from './component/Test';
+import Editor from "./component/Editor/Editor";
 
 function App() {
   return (
     <div className="App">
-     {/* <Editor/> */}
-     <Test/>
+      <CssBaseline />
+      <Sidebar>
+        <Editor />
+      </Sidebar>
     </div>
   );
 }
