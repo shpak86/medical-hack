@@ -122,30 +122,6 @@ export function Header({
           </div>
           <ButtonGroup variant="outlined" aria-label="outlined button group">
             <LoadingButton
-              variant="contained"
-              size="small"
-              sx={buttonStyle}
-              onClick={getObjects}
-            >
-              Все объекты
-            </LoadingButton>
-            <LoadingButton
-              variant="contained"
-              size="small"
-              sx={buttonStyle}
-              onClick={getInterceptions}
-            >
-              Разметка
-            </LoadingButton>
-            <LoadingButton
-              variant="contained"
-              size="small"
-              sx={buttonStyle}
-              onClick={loadImage}
-            >
-              Выгрузить
-            </LoadingButton>
-            <LoadingButton
               component="label"
               variant="contained"
               size="small"
@@ -160,6 +136,24 @@ export function Header({
                 type="file"
                 onChange={handleChange}
               />
+            </LoadingButton>
+            <LoadingButton
+              component="label"
+              variant="contained"
+              size="small"
+              sx={buttonStyle}
+              onClick={getInterceptions}
+            >
+              Разметка
+            </LoadingButton>
+            <LoadingButton
+              component="label"
+              variant="contained"
+              size="small"
+              sx={buttonStyle}
+              onClick={loadImage}
+            >
+              Выгрузить
             </LoadingButton>
           </ButtonGroup>
         </Stack>
