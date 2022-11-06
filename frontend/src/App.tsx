@@ -119,21 +119,22 @@ function App() {
               lockRotation: true,
             })
           );
-        } else if (mark.type === 'line') {
-          let scaleX = 1
-          let scaleY = 1
-          if (mark.geometry && mark.geometry[2]) {
-            scaleX = mark.geometry[2].x
-            scaleY = mark.geometry[2].y
-          }
-          canvas.add(
-            new fabric.Line([img.width * mark.geometry[0].x * scaleX, img.height * mark.geometry[0].y * scaleY, img.width * mark.geometry[1].x * scaleX, img.height * mark.geometry[1].y * scaleY], {
-              top: img.top + img.height * mark.geometry[2].y,
-              left: img.left + img.width * mark.geometry[2].x,
-              stroke: "purple",
-            })
-          );
-        } else if (mark.type === 'ruler') { }
+        } 
+        // else if (mark.type === 'line') {
+        //   let scaleX = 1
+        //   let scaleY = 1
+        //   if (mark.geometry && mark.geometry[2]) {
+        //     scaleX = mark.geometry[2].x
+        //     scaleY = mark.geometry[2].y
+        //   }
+        //   canvas.add(
+        //     new fabric.Line([img.width * mark.geometry[0].x * scaleX, img.height * mark.geometry[0].y * scaleY, img.width * mark.geometry[1].x * scaleX, img.height * mark.geometry[1].y * scaleY], {
+        //       top: img.top + img.height * mark.geometry[2].y,
+        //       left: img.left + img.width * mark.geometry[2].x,
+        //       stroke: "purple",
+        //     })
+        //   );
+        // } else if (mark.type === 'ruler') { }
       });
     }
   }, [dicomImageMarkup.data])
