@@ -1,7 +1,7 @@
 package org.medicalhack.dicomserver.data.repositories;
 
 import org.medicalhack.dicomserver.data.entities.markup.DicomDataEntity;
-import org.medicalhack.dicomserver.domain.entities.dicom.DicomData;
+import org.medicalhack.dicomserver.domain.data.dicom.DicomData;
 import org.medicalhack.dicomserver.domain.repositories.DicomDataRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

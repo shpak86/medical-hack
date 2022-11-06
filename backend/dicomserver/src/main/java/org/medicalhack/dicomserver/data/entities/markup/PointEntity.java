@@ -11,7 +11,7 @@ import org.springframework.lang.NonNull;
 public class PointEntity {
 
     @NonNull
-    private Long position;
+    private int position;
 
     @NonNull
     private Double x;
@@ -19,7 +19,7 @@ public class PointEntity {
     @NonNull
     private Double y;
 
-    public PointEntity(long position, double x, double y) {
+    public PointEntity(int position, double x, double y) {
         this.position = position;
         this.x = x;
         this.y = y;
@@ -45,11 +45,11 @@ public class PointEntity {
         this.y = y;
     }
 
-    public long getPosition() {
+    public int getPosition() {
         return position;
     }
 
-    public void setPosition(long position) {
+    public void setPosition(int position) {
         this.position = position;
     }
 

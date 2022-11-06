@@ -1,4 +1,4 @@
-package org.medicalhack.dicomserver.domain.entities.dicom;
+package org.medicalhack.dicomserver.domain.data.dicom;
 
 public class DicomData {
     long dicomId;

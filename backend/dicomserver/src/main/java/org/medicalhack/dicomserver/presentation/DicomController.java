@@ -3,9 +3,9 @@ package org.medicalhack.dicomserver.presentation;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
-import org.medicalhack.dicomserver.domain.MainInteractor;
-import org.medicalhack.dicomserver.domain.entities.dicom.DicomData;
-import org.medicalhack.dicomserver.domain.entities.markup.ImageMarkup;
+import org.medicalhack.dicomserver.domain.usecase.MarkupInteractor;
+import org.medicalhack.dicomserver.domain.data.dicom.DicomData;
+import org.medicalhack.dicomserver.domain.data.markup.ImageMarkup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +27,7 @@ public class DicomController {
     private final Logger logger = LoggerFactory.getLogger(DicomController.class);
 
     @Autowired
-    MainInteractor interactor;
+    MarkupInteractor interactor;
 
     @PostMapping("/")
     ResponseEntity<String> postDicom(@RequestParam("file") MultipartFile file) {

@@ -1,4 +1,4 @@
-package org.medicalhack.dicomserver.domain.entities.markup;
+package org.medicalhack.dicomserver.domain.data.markup;
 
 public class MarkupPoint {
     private double x;
