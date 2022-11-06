@@ -4,20 +4,23 @@ interface IRequestConfig {
   method: httpMethod;
   credentials?: "include";
   body?: any;
+  headers?: any;
 }
 
 export const fetchService = async (
   url: string,
   method: httpMethod = "GET",
-  body?: any
+  body?: any,
+  headers?: any,
 ): Promise<any> => {
   const requestConfig: IRequestConfig = {
     method,
     body,
     credentials: "include",
+    
   };
 
-  const request = await fetch(url, requestConfig)
+  const request = await fetch(url, {...requestConfig, headers})
     .then((res) => {
       if (!res.ok) {
         if (res.status === 401) {

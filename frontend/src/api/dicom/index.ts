@@ -87,7 +87,10 @@ export const sendDicomImageMarkup = async (
   markup: Markup[];
 }> => {
   const url = `/dicom/${dicomId}/image/${imageId}/markup`;
-  const result = fetchService(url, "POST", JSON.stringify(body));
+  const result = fetchService(url, "POST", JSON.stringify(body), {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  },);
   return result;
 };
 

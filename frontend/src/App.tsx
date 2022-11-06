@@ -42,7 +42,7 @@ function App() {
   const requestImg = useRequest<{ dicomId: number; imageId: number }>();
   const dicomImageMarkup = useRequest<DicomImageMarkup>();
   const sendMarkup = useRequest<SendMarkup>();
-
+  // const dicomId = uploadDicom?.data?.dicomId;
   // Отправка разметки.
   // sendMarkup.request(sendDicomImageMarkup());
 
@@ -84,15 +84,23 @@ function App() {
   useEffect(() => {
     const img = getImage();
     if (img) {
-      console.log('dicomImageMarkup',dicomImageMarkup)
+      console.log('dicomImageMarkup', dicomImageMarkup)
       dicomImageMarkup.data?.markup.forEach(mark => {
         if (mark.type === 'rect') {
+          let scaleX = 1
+          let scaleY = 1
+          if (mark.geometry && mark.geometry[2]) {
+            scaleX = mark.geometry[2].x
+            scaleY = mark.geometry[2].y
+          }
           canvas.add(
             new fabric.Rect({
               top: img.top + img.height * mark.geometry[0].y,
               left: img.left + img.width * mark.geometry[0].x,
               width: img.width * mark.geometry[1].x - img.height * mark.geometry[0].x,
               height: img.height * mark.geometry[1].y - img.height * mark.geometry[0].y,
+              scaleX,
+              scaleY,
               fill: "rgba(255, 255, 255, 0.0)",
               stroke: "red",
               type: "rect",
@@ -112,8 +120,14 @@ function App() {
             })
           );
         } else if (mark.type === 'line') {
+          let scaleX = 1
+          let scaleY = 1
+          if (mark.geometry && mark.geometry[2]) {
+            scaleX = mark.geometry[2].x
+            scaleY = mark.geometry[2].y
+          }
           canvas.add(
-            new fabric.Line([img.width * mark.geometry[0].x, img.height * mark.geometry[0].y, img.width * mark.geometry[1].x, img.height * mark.geometry[1].y], {
+            new fabric.Line([img.width * mark.geometry[0].x * scaleX, img.height * mark.geometry[0].y * scaleY, img.width * mark.geometry[1].x * scaleX, img.height * mark.geometry[1].y * scaleY], {
               top: img.top + img.height * mark.geometry[2].y,
               left: img.left + img.width * mark.geometry[2].x,
               stroke: "purple",
@@ -159,6 +173,7 @@ function App() {
   }, [canvas]);
   const getInterceptions = () => {
     const img = getImage();
+    if (!img) return
     //TODO только пересечения, если объект не полностью на картинке, то он тоже должен туда попасть ?? updated: пока не попадает, тк запрет на перемещение
     const selectors = canvas.getObjects().filter(function (o) {
       return o.intersectsWithObject(img) && o.myId !== "myimg";
@@ -178,6 +193,7 @@ function App() {
           geometry: [
             { x: selectorXLeftTop, y: selectorYLeftTop },
             { x: selectorXRightBottom, y: selectorYRightBottom },
+            { x: item.scaleX, y: item.scaleY },
           ],
         };
       } else if (item.type === 'circle') {
@@ -188,7 +204,7 @@ function App() {
           type: item.type,
           geometry: [
             { x: selectorXLeftTop, y: selectorYLeftTop },
-            { x: item.radius, y: item.radius },
+            { x: item.radius * item.scaleX, y: item.radius * item.scaleY },
           ],
         };
       } else if (item.type === 'line') {
@@ -201,6 +217,7 @@ function App() {
             { x: item.x1 / img.width, y: item.y1 / img.height },
             { x: item.x2 / img.width, y: item.y2 / img.height },
             { x: selectorXLeftTop, y: selectorYLeftTop },
+            { x: item.scaleX, y: item.scaleY },
           ],
         };
       } else {
@@ -212,10 +229,12 @@ function App() {
     });
     const body = {
       tags: selectedTag,
-      markups,
+      markup: markups,
     }
-    console.log('uploadDicomId',uploadDicomId)
-    sendMarkup.request(sendDicomImageMarkup(uploadDicomId,0, body));
+    
+    // console.log('uploadDicomId', requestImgId.data?.dicomId)
+    // const dicomId = uploadDicom?.data?.dicomId
+    sendMarkup.request(sendDicomImageMarkup(requestImgId.data?.dicomId, 0, body));
     console.log('body', body)
   };
   /**
@@ -327,13 +346,17 @@ function App() {
       canvas.dispose();
     };
   }, []);
-  const deleteObjects = () => {
+  const deleteObjects = async () => {
     canvas.getObjects().forEach(function (o) {
       if (o.myId !== "myimg") {
         canvas.remove(o);
       }
     });
   };
+  const deleteImg = async () => {
+    const img = getImage()
+    if (img) canvas.remove(img)
+  }
   const deleteLastObject = () => {
     const objects = canvas.getObjects();
     const lastObject = objects[objects.length - 1];
@@ -504,7 +527,7 @@ function App() {
           </Stack>
         }
         markup={dicomImageMarkup.data}
-        selectedTag={selectedTag} 
+        selectedTag={selectedTag}
         selectTag={selectTag}
       >
         <Header
@@ -522,6 +545,8 @@ function App() {
           deleteObjects={deleteObjects}
           deleteLastObject={deleteLastObject}
           handleChangeInput={handleChangeInput}
+          deleteImg={deleteImg}
+          selectTag={selectTag}
         />
         {loading && (
           <Stack

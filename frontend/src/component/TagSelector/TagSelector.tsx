@@ -28,6 +28,8 @@ export function TagSelector({ tags = defaultTags, markup, selectedTag, selectTag
   useEffect(() => {
     if (markup && markup.tags && markup.tags.length > 0) {
       selectTag(markup.tags)
+    } else {
+      selectTag([])
     }
   }, [markup])
 
