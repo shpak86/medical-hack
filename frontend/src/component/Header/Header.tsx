@@ -6,6 +6,8 @@ import {
   Typography,
   Slider,
   Stack,
+  TextField,
+  Box,
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -18,7 +20,7 @@ interface HeaderProps {
   addRect: () => void;
   addCircle: () => void;
   addLine: () => void;
-  loadImage: () => void;
+  loadDicom: () => void;
   getObjects: () => void;
   getInterceptions: () => void;
   clearImgFilters: () => void;
@@ -28,13 +30,14 @@ interface HeaderProps {
   handleChange: () => void;
   deleteObjects: () => void;
   deleteLastObject: () => void;
+  handleChangeInput: () => void;
 }
 
 export function Header({
   addRect,
   addCircle,
   addLine,
-  loadImage,
+  loadDicom,
   getObjects,
   getInterceptions,
   clearImgFilters,
@@ -44,6 +47,7 @@ export function Header({
   handleChange,
   deleteObjects,
   deleteLastObject,
+  handleChangeInput,
 }: HeaderProps) {
   return (
     <AppBar
@@ -146,16 +150,38 @@ export function Header({
             >
               Разметка
             </LoadingButton>
+          </ButtonGroup>
+          <Box
+            sx={{
+              border: `solid ${grey[400]} 1px`,
+              display: "flex",
+              borderRadius: 1,
+            }}
+          >
             <LoadingButton
               component="label"
-              variant="contained"
+              variant="text"
               size="small"
               sx={buttonStyle}
-              onClick={loadImage}
+              onClick={loadDicom}
             >
               Выгрузить
             </LoadingButton>
-          </ButtonGroup>
+            <Stack flexDirection="column">
+              <TextField
+                InputProps={{
+                  style: {
+                    color: grey[400],
+                  },
+                }}
+                hiddenLabel
+                id="dicomNumber"
+                onChange={handleChangeInput}
+                variant="filled"
+                size="small"
+              />
+            </Stack>
+          </Box>
         </Stack>
       </Toolbar>
     </AppBar>
