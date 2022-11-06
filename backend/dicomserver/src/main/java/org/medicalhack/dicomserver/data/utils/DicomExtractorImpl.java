@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import org.medicalhack.dicomserver.domain.entities.dicom.DicomData;
+import org.medicalhack.dicomserver.domain.data.dicom.DicomData;
 import org.medicalhack.dicomserver.domain.repositories.DicomDataRepository;
 import org.medicalhack.dicomserver.domain.repositories.DicomFileRepository;
 import org.medicalhack.dicomserver.domain.repositories.ImagesRepository;

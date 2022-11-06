@@ -18,10 +18,12 @@ import useRequest from "./hooks/useRequest";
 import { grey } from "@mui/material/colors";
 import {
   DicomImageMarkup,
+  SendMarkup,
   getDicom,
   getDicomImage,
   getDicomImageMarkup,
   sendDicom,
+  sendDicomImageMarkup,
 } from "./api/dicom";
 import styles from "./App.module.scss";
 
@@ -30,6 +32,7 @@ function App() {
   const [contrastValue, setImgContrastValue] = useState(0);
   const [brightnessValue, setImgBrightnessValue] = useState(0);
   const [selectedTag, selectTag] = useState<string[]>([]);
+  const [uploadDicomId, setUploadDicomId] = useState<number>();
   const uploadDicom = useRequest<{ dicomId: number }>();
   const requestImgId = useRequest<{
     dicomId: number;
@@ -38,6 +41,10 @@ function App() {
   }>();
   const requestImg = useRequest<{ dicomId: number; imageId: number }>();
   const dicomImageMarkup = useRequest<DicomImageMarkup>();
+  const sendMarkup = useRequest<SendMarkup>();
+
+  // Отправка разметки.
+  // sendMarkup.request(sendDicomImageMarkup());
 
   // && для плавного хода прилодера.
   const loading = !(
@@ -61,14 +68,16 @@ function App() {
     }
   }
 
-  const requestDicomData = useCallback(async () => {
-    const dicomId = uploadDicom?.data?.dicomId;
-    if (dicomId) {
-      await requestImgId.request(() => getDicom(dicomId));
-      await requestImg.request(() => getDicomImage(dicomId, 0));
-      await dicomImageMarkup.request(() => getDicomImageMarkup(dicomId, 0));
-    }
-  }, [uploadDicom?.data?.dicomId]);
+  const requestDicomData = useCallback(
+    async (dicomId: number) => {
+      if (dicomId) {
+        await requestImgId.request(() => getDicom(dicomId));
+        await requestImg.request(() => getDicomImage(dicomId, 0));
+        await dicomImageMarkup.request(() => getDicomImageMarkup(dicomId, 0));
+      }
+    },
+    [uploadDicom?.data?.dicomId]
+  );
 
 
 
@@ -119,7 +128,8 @@ function App() {
   }, [requestImg.data]);
 
   useEffect(() => {
-    requestDicomData();
+    const dicomId = uploadDicom?.data?.dicomId;
+    requestDicomData(dicomId);
   }, [requestDicomData, uploadDicom.data]);
   // const [dicoms, setDicoms] = useState();
 
@@ -452,6 +462,16 @@ function App() {
       setImgFilters();
     }
   }, [brightnessValue, canvas, contrastValue, setImgFilters]);
+
+  // Кладём айди из инпута в стэйт для дальнейшего поиска дикома
+  const handleChangeInput = (event: React.FormEvent<HTMLInputElement>) => {
+    setUploadDicomId(event.target.value);
+  };
+
+  const loadDicom = () => {
+    requestDicomData(uploadDicomId);
+  };
+
   return (
     <div className="App">
       <CssBaseline />
@@ -489,7 +509,7 @@ function App() {
           addRect={addRect}
           addCircle={addCircle}
           addLine={addLine}
-          loadImage={loadImage}
+          loadDicom={loadDicom}
           getObjects={getObjects}
           getInterceptions={getInterceptions}
           clearImgFilters={clearImgFilters}
@@ -498,6 +518,7 @@ function App() {
           brightnessValue={brightnessValue}
           deleteObjects={deleteObjects}
           deleteLastObject={deleteLastObject}
+          handleChangeInput={handleChangeInput}
         />
         {loading && (
           <Stack

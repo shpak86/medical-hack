@@ -16,7 +16,7 @@ public class DicomDataEntity {
 
     long dicomId;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     Date creationDate;
 
     long imagesNumber;
