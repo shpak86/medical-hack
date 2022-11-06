@@ -66,13 +66,20 @@ export const getDicomImageMarkup = async (
 
 /** Загрузка данных **/
 
+export interface SendMarkup {
+  dicomId: string;
+  imageId: number;
+  tags: string[];
+  markup: Markup[];
+}
+
 /**
  * Отправка разметки для картинки
  */
 export const sendDicomImageMarkup = async (
   dicomId: string,
   imageId: number,
-  body: { dicomId: string; imageId: number; tags: string[]; markup: Markup[] }
+  body: SendMarkup
 ): Promise<{
   dicomId: string;
   imageId: number;
@@ -80,9 +87,7 @@ export const sendDicomImageMarkup = async (
   markup: Markup[];
 }> => {
   const url = `/dicom/${dicomId}/image/${imageId}/markup`;
-  //todo json stringify
   const result = fetchService(url, "POST", JSON.stringify(body));
-
   return result;
 };
 
