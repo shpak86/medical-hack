@@ -77,6 +77,9 @@ export function Header({
             <Button size="small" sx={buttonStyle} onClick={deleteLastObject}>
               Удалить последний
             </Button>
+            {/* <Button size="small" sx={buttonStyle} onClick={getObjects}>
+              Получить объекты
+            </Button> */}
             <Button size="small" sx={buttonStyle} onClick={deleteObjects}>
               Удалить все
             </Button>

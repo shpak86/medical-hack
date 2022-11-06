@@ -1,10 +1,14 @@
 import { FormControl, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent } from "@mui/material";
 import styles from "./TagSelector.module.scss";
-import { useState } from "react";
+import { useEffect } from "react";
 import { grey } from "@mui/material/colors";
+import { DicomImageMarkup } from "../../api/dicom";
 
 interface TagSelectorProps {
   tags?: string[];
+  markup?: DicomImageMarkup;
+  selectTag: (tags: string[])=> void;
+  selectedTag: string[];
 }
 const defaultTags: string[] = [
   'COVID-19; все доли; многочисленные; размер любой',
@@ -19,8 +23,13 @@ const defaultTags: string[] = [
   'Метастатическое поражение лёгких; Все доли; Немногочисленные; 5-10 мм',
 ]
 
-export function TagSelector({ tags = defaultTags }: TagSelectorProps) {
-  const [selectedTag, selectTag] = useState<string[]>([]);
+export function TagSelector({ tags = defaultTags, markup, selectedTag, selectTag  }: TagSelectorProps) {
+
+  useEffect(() => {
+    if (markup && markup.tags.length > 0) {
+      selectTag(markup.tags)
+    }
+  }, [markup])
 
   const handleSelect = (e: SelectChangeEvent<typeof defaultTags>) => {
     const { value } = e.target;

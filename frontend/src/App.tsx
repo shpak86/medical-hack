@@ -29,6 +29,7 @@ function App() {
   const [canvas, setCanvas] = useState();
   const [contrastValue, setImgContrastValue] = useState(0);
   const [brightnessValue, setImgBrightnessValue] = useState(0);
+  const [selectedTag, selectTag] = useState<string[]>([]);
   const uploadDicom = useRequest<{ dicomId: number }>();
   const requestImgId = useRequest<{
     dicomId: number;
@@ -69,6 +70,50 @@ function App() {
     }
   }, [uploadDicom?.data?.dicomId]);
 
+
+
+  useEffect(() => {
+    const img = getImage();
+    if (img) {
+      dicomImageMarkup.data?.markup.forEach(mark => {
+        if (mark.type === 'rect') {
+          canvas.add(
+            new fabric.Rect({
+              top: img.top + img.height * mark.geometry[0].y,
+              left: img.left + img.width * mark.geometry[0].x,
+              width: img.width * mark.geometry[1].x - img.height * mark.geometry[0].x,
+              height: img.height * mark.geometry[1].y - img.height * mark.geometry[0].y,
+              fill: "rgba(255, 255, 255, 0.0)",
+              stroke: "red",
+              type: "rect",
+              lockRotation: true,
+            })
+          );
+        } else if (mark.type === 'circle') {
+          canvas.add(
+            new fabric.Circle({
+              top: img.top + img.height * mark.geometry[0].y,
+              left: img.left + img.width * mark.geometry[0].x,
+              radius: mark.geometry[1].x,
+              fill: "rgba(255, 255, 255, 0.0)",
+              stroke: "green",
+              type: "circle",
+              lockRotation: true,
+            })
+          );
+        } else if (mark.type === 'line') {
+          canvas.add(
+            new fabric.Line([img.width * mark.geometry[0].x, img.height * mark.geometry[0].y, img.width * mark.geometry[1].x, img.height * mark.geometry[1].y], {
+              top: img.top + img.height * mark.geometry[2].y,
+              left: img.left + img.width * mark.geometry[2].x,
+              stroke: "purple",
+            })
+          );
+        } else if (mark.type === 'ruler') { }
+      });
+    }
+  }, [dicomImageMarkup.data])
+
   useEffect(() => {
     requestImg.data && loadImage();
   }, [requestImg.data]);
@@ -95,6 +140,7 @@ function App() {
   // }
 
   const getImage = useCallback(() => {
+    if (!canvas) return
     const img = canvas.getObjects().find(function (o) {
       return o.myId === "myimg";
     });
@@ -108,21 +154,56 @@ function App() {
     });
 
     const markups = selectors.map((item) => {
-      const selectorXLeftTop = (item.left - img.left) / img.width;
-      const selectorYLeftTop = (item.top - img.top) / img.height;
+      if (item.type === 'rect') {
+        const selectorXLeftTop = (item.left - img.left) / img.width;
+        const selectorYLeftTop = (item.top - img.top) / img.height;
 
-      const selectorXRightBottom =
-        (item.left - img.left + item.width) / img.width;
-      const selectorYRightBottom =
-        (item.top - img.top + item.height) / img.height;
-      return {
-        type: item.type,
-        geometry: [
-          [selectorXLeftTop, selectorYLeftTop],
-          [selectorXRightBottom, selectorYRightBottom],
-        ],
-      };
+        const selectorXRightBottom =
+          (item.left - img.left + item.width) / img.width;
+        const selectorYRightBottom =
+          (item.top - img.top + item.height) / img.height;
+        return {
+          type: item.type,
+          geometry: [
+            { x: selectorXLeftTop, y: selectorYLeftTop },
+            { x: selectorXRightBottom, y: selectorYRightBottom },
+          ],
+        };
+      } else if (item.type === 'circle') {
+        const selectorXLeftTop = (item.left - img.left) / img.width;
+        const selectorYLeftTop = (item.top - img.top) / img.height;
+
+        return {
+          type: item.type,
+          geometry: [
+            { x: selectorXLeftTop, y: selectorYLeftTop },
+            { x: item.radius, y: item.radius },
+          ],
+        };
+      } else if (item.type === 'line') {
+        const selectorXLeftTop = (item.left - img.left) / img.width;
+        const selectorYLeftTop = (item.top - img.top) / img.height;
+
+        return {
+          type: item.type,
+          geometry: [
+            { x: item.x1 / img.width, y: item.y1 / img.height },
+            { x: item.x2 / img.width, y: item.y2 / img.height },
+            { x: selectorXLeftTop, y: selectorYLeftTop },
+          ],
+        };
+      } else {
+        return {
+          type: '',
+          geometry: []
+        }
+      }
     });
+    const body = {
+      tags: selectedTag,
+      markups,
+    }
+    console.log('body', body)
   };
   /**
    * Запрет на перемещение фигур вне картинки
@@ -160,7 +241,7 @@ function App() {
       console.log("yep");
     }
   };
-  const changeInterceptionCoordinates = () => {};
+  const changeInterceptionCoordinates = () => { };
 
   function zoom(opt) {
     var delta = opt.e.deltaY;
@@ -399,6 +480,9 @@ function App() {
             )}
           </Stack>
         }
+        markup={dicomImageMarkup.data}
+        selectedTag={selectedTag} 
+        selectTag={selectTag}
       >
         <Header
           handleChange={handleChange}
