@@ -26,7 +26,7 @@ const defaultTags: string[] = [
 export function TagSelector({ tags = defaultTags, markup, selectedTag, selectTag  }: TagSelectorProps) {
 
   useEffect(() => {
-    if (markup && markup.tags.length > 0) {
+    if (markup && markup.tags && markup.tags.length > 0) {
       selectTag(markup.tags)
     }
   }, [markup])

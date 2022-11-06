@@ -84,6 +84,7 @@ function App() {
   useEffect(() => {
     const img = getImage();
     if (img) {
+      console.log('dicomImageMarkup',dicomImageMarkup)
       dicomImageMarkup.data?.markup.forEach(mark => {
         if (mark.type === 'rect') {
           canvas.add(
@@ -213,6 +214,8 @@ function App() {
       tags: selectedTag,
       markups,
     }
+    console.log('uploadDicomId',uploadDicomId)
+    sendMarkup.request(sendDicomImageMarkup(uploadDicomId,0, body));
     console.log('body', body)
   };
   /**
