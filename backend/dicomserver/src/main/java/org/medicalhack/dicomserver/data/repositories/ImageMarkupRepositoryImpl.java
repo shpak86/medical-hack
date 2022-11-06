@@ -58,7 +58,7 @@ public class ImageMarkupRepositoryImpl implements MarkupRepository {
             for (MarkupEntity item : entity.getMarkup()) {
                 List<MarkupPoint> geometry = new ArrayList<>();
                 List<PointEntity> points = item.getGeometry();
-                points.sort((a, b) -> b.getPosition() - a.getPosition());
+                points.sort((a, b) -> a.getPosition() - b.getPosition());
                 for (PointEntity point : item.getGeometry()) {
                     geometry.add(new MarkupPoint(point.getX(), point.getY()));
                 }
