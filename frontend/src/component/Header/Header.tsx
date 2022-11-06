@@ -20,17 +20,19 @@ interface HeaderProps {
   addRect: () => void;
   addCircle: () => void;
   addLine: () => void;
-  loadDicom: () => void;
+  loadDicom: (e: any) => void;
   getObjects: () => void;
   getInterceptions: () => void;
   clearImgFilters: () => void;
   handleRange: (name: string) => () => void;
   contrastValue: number;
   brightnessValue: number;
-  handleChange: () => void;
+  handleChange: (e: any) => void;
   deleteObjects: () => void;
   deleteLastObject: () => void;
   handleChangeInput: () => void;
+  deleteImg: () => void;
+  selectTag: (tags: string[]) => void;
 }
 
 export function Header({
@@ -48,6 +50,8 @@ export function Header({
   deleteObjects,
   deleteLastObject,
   handleChangeInput,
+  deleteImg,
+  selectTag,
 }: HeaderProps) {
   return (
     <AppBar
@@ -73,9 +77,9 @@ export function Header({
             <Button size="small" sx={buttonStyle} onClick={addCircle}>
               круг
             </Button>
-            <Button size="small" sx={buttonStyle} onClick={addLine}>
+            {/* <Button size="small" sx={buttonStyle} onClick={addLine}>
               линейка
-            </Button>
+            </Button> */}
           </ButtonGroup>
           <ButtonGroup variant="outlined" aria-label="outlined button group">
             <Button size="small" sx={buttonStyle} onClick={deleteLastObject}>
@@ -108,7 +112,7 @@ export function Header({
                 onChange={handleRange("contrast")}
                 value={contrastValue}
                 min={-0.9}
-                max={0.9}
+                max={0.8}
                 step={0.05}
                 aria-label="Slider"
                 valueLabelDisplay="off"
@@ -118,14 +122,14 @@ export function Header({
                 value={brightnessValue}
                 onChange={handleRange("brightness")}
                 min={-0.9}
-                max={0.9}
+                max={0.8}
                 step={0.05}
                 aria-label="Slider"
                 valueLabelDisplay="off"
                 size="small"
               />
             </div>
-            <Button onClick={clearImgFilters}>Сбросить</Button>
+            <Button sx={{ ml: '10px' }} onClick={clearImgFilters}>Сбросить</Button>
           </div>
           <ButtonGroup variant="outlined" aria-label="outlined button group">
             <LoadingButton
@@ -141,7 +145,12 @@ export function Header({
                 hidden
                 accept="dicom/*"
                 type="file"
-                onChange={handleChange}
+                onChange={async (e) => {
+                  selectTag([])
+                  await deleteObjects()
+                  await deleteImg()
+                  handleChange(e)
+                }}
               />
             </LoadingButton>
             <LoadingButton
@@ -166,7 +175,12 @@ export function Header({
               variant="text"
               size="small"
               sx={buttonStyle}
-              onClick={loadDicom}
+              onClick={async (e) => {
+                selectTag([])
+                await deleteObjects()
+                await deleteImg()
+                loadDicom(e)
+              }}
             >
               Выгрузить
             </LoadingButton>
