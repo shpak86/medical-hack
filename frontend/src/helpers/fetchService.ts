@@ -35,7 +35,7 @@ export const fetchService = async (
           throw Error("Ошибка сервера!");
         }
       }
-      if (url.includes("image")) {
+      if (url.includes("image") && !url.includes('markup')) {
         return res.blob().then((blobResponse) => {
           return URL.createObjectURL(blobResponse);
         });

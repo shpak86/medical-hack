@@ -3,12 +3,17 @@ import Drawer from "@mui/material/Drawer";
 import { grey } from "@mui/material/colors";
 import styles from "./Sidebar.module.scss";
 import TagSelector from "../TagSelector";
+import { DicomImageMarkup } from "../../api/dicom";
 
 const drawerWidth = 240;
 
 interface SidebarProps {
   children?: React.ReactNode;
   miniature?: React.ReactNode;
+  markup?: DicomImageMarkup;
+  selectTag: (tags: string[])=> void;
+  selectedTag: string[];
+
 }
 const Stub = [...Array(5)].map(() => (
   <Skeleton
@@ -20,7 +25,7 @@ const Stub = [...Array(5)].map(() => (
   />
 ));
 
-export function Sidebar({ children, miniature = Stub }: SidebarProps) {
+export function Sidebar({ children, miniature = Stub, markup, selectedTag, selectTag }: SidebarProps) {
   return (
     <div className={styles.root}>
       <CssBaseline />
@@ -48,7 +53,7 @@ export function Sidebar({ children, miniature = Stub }: SidebarProps) {
             МосКомАртель
           </Typography>
         </div>
-        <TagSelector />
+        <TagSelector markup={markup} selectTag={selectTag} selectedTag={selectedTag}/>
         <div className={styles.container}>{miniature}</div>
       </Drawer>
       <main className={styles.content}>
